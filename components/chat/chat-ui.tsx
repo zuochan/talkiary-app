@@ -1,4 +1,5 @@
 import Loading from "@/app/[locale]/loading"
+import { extractScheduleFromMarkdown } from "@/lib/utils"
 import { useChatHandler } from "@/components/chat/chat-hooks/use-chat-handler"
 import { ChatbotUIContext } from "@/context/context"
 import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
@@ -19,9 +20,11 @@ import { ChatMessages } from "./chat-messages"
 import { ChatScrollButtons } from "./chat-scroll-buttons"
 import { ChatSecondaryButtons } from "./chat-secondary-buttons"
 
-interface ChatUIProps {}
+interface ChatUIProps {
+  setSchedule: (s: { time: string; activity: string; note?: string }[]) => void
+}
 
-export const ChatUI: FC<ChatUIProps> = ({}) => {
+export const ChatUI: FC<ChatUIProps> = props => {
   useHotkey("o", () => handleNewChat())
 
   const params = useParams()
@@ -137,6 +140,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     setShowFilesDisplay(true)
 
     const fetchedChatMessages = fetchedMessages.map(message => {
+      // console.log("[DEBUG] fetchMessages() called")
       return {
         message,
         fileItems: messageFileItems
@@ -148,6 +152,20 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
     })
 
     setChatMessages(fetchedChatMessages)
+
+    // Extract schedule from last assistant message and call setSchedule if needed
+    const aiMessages = fetchedMessages.filter(msg => msg.role === "assistant")
+    const lastMessage = aiMessages[aiMessages.length - 1]?.content
+    // console.log("[DEBUG] Last assistant message:", lastMessage)
+
+    console.log("[DEBUG] props.setSchedule is defined:", !!props.setSchedule)
+    if (lastMessage && typeof props.setSchedule === "function") {
+      const extracted = extractScheduleFromMarkdown(lastMessage)
+      // console.log("[DEBUG] Extracted schedule:", extracted)
+      if (extracted.length > 0) {
+        props.setSchedule(extracted)
+      }
+    }
   }
 
   const fetchChat = async () => {

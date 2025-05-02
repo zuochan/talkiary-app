@@ -1217,6 +1217,27 @@ export type Database = {
           },
         ]
       }
+      diary_sessions: {
+        Row: {
+          id: string
+          user_id: string
+          date: string
+          schedule_json: any
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          date: string
+          schedule_json: any
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          date?: string
+          schedule_json?: any
+        }
+        Relationships: []
+      }
       workspaces: {
         Row: {
           created_at: string
