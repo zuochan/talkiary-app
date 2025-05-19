@@ -13,6 +13,7 @@ interface MessageActionsProps {
   onCopy: () => void
   onEdit: () => void
   onRegenerate: () => void
+  onSaveSchedule?: () => void
 }
 
 export const MessageActions: FC<MessageActionsProps> = ({
@@ -22,7 +23,8 @@ export const MessageActions: FC<MessageActionsProps> = ({
   isHovering,
   onCopy,
   onEdit,
-  onRegenerate
+  onRegenerate,
+  onSaveSchedule
 }) => {
   const { isGenerating } = useContext(ChatbotUIContext)
 
@@ -92,6 +94,22 @@ export const MessageActions: FC<MessageActionsProps> = ({
                 onClick={handleCopy}
               />
             )
+          }
+        />
+      )}
+
+      {isLast && isAssistant && onSaveSchedule && (
+        <WithTooltip
+          delayDuration={1000}
+          side="bottom"
+          display={<div>Save Schedule</div>}
+          trigger={
+            <button
+              className="rounded bg-green-600 px-2 py-1 text-xs font-semibold text-white hover:bg-green-700"
+              onClick={onSaveSchedule}
+            >
+              💾 Save
+            </button>
           }
         />
       )}

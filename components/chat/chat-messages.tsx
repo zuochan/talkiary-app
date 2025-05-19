@@ -4,7 +4,9 @@ import { Tables } from "@/supabase/types"
 import { FC, useContext, useState } from "react"
 import { Message } from "../messages/message"
 
-interface ChatMessagesProps {}
+interface ChatMessagesProps {
+  onSaveSchedule?: () => void
+}
 
 export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
   const { chatMessages, chatFileItems } = useContext(ChatbotUIContext)

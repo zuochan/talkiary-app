@@ -23,6 +23,8 @@ import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 import { MessageActions } from "./message-actions"
 import { MessageMarkdown } from "./message-markdown"
+import { insertSchedule } from "@/lib/supabase/save-schedule"
+import { supabase } from "@/lib/supabase/browser-client"
 
 const ICON_SIZE = 32
 
@@ -34,6 +36,7 @@ interface MessageProps {
   onStartEdit: (message: Tables<"messages">) => void
   onCancelEdit: () => void
   onSubmitEdit: (value: string, sequenceNumber: number) => void
+  onSaveSchedule?: () => void
 }
 
 export const Message: FC<MessageProps> = ({
@@ -43,7 +46,8 @@ export const Message: FC<MessageProps> = ({
   isLast,
   onStartEdit,
   onCancelEdit,
-  onSubmitEdit
+  onSubmitEdit,
+  onSaveSchedule
 }) => {
   const {
     assistants,
@@ -199,6 +203,7 @@ export const Message: FC<MessageProps> = ({
             isEditing={isEditing}
             isHovering={isHovering}
             onRegenerate={handleRegenerate}
+            onSaveSchedule={onSaveSchedule}
           />
         </div>
         <div className="space-y-3">

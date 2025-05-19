@@ -21,7 +21,7 @@ import { ChatScrollButtons } from "./chat-scroll-buttons"
 import { ChatSecondaryButtons } from "./chat-secondary-buttons"
 
 interface ChatUIProps {
-  setSchedule: (s: { time: string; activity: string; note?: string }[]) => void
+  setSchedule?: (s: { time: string; activity: string; note?: string }[]) => void
 }
 
 export const ChatUI: FC<ChatUIProps> = props => {
@@ -59,6 +59,10 @@ export const ChatUI: FC<ChatUIProps> = props => {
   } = useScroll()
 
   const [loading, setLoading] = useState(true)
+
+  const [schedule, setSchedule] = useState<
+    { time: string; activity: string; note?: string }[] | null
+  >(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,12 +162,11 @@ export const ChatUI: FC<ChatUIProps> = props => {
     const lastMessage = aiMessages[aiMessages.length - 1]?.content
     // console.log("[DEBUG] Last assistant message:", lastMessage)
 
-    console.log("[DEBUG] props.setSchedule is defined:", !!props.setSchedule)
     if (lastMessage && typeof props.setSchedule === "function") {
       const extracted = extractScheduleFromMarkdown(lastMessage)
-      // console.log("[DEBUG] Extracted schedule:", extracted)
       if (extracted.length > 0) {
         props.setSchedule(extracted)
+        setSchedule(extracted)
       }
     }
   }
@@ -199,6 +202,12 @@ export const ChatUI: FC<ChatUIProps> = props => {
     })
   }
 
+  const handleSaveSchedule = () => {
+    if (schedule && typeof props.setSchedule === "function") {
+      props.setSchedule(schedule)
+    }
+  }
+
   if (loading) {
     return <Loading />
   }
@@ -231,7 +240,7 @@ export const ChatUI: FC<ChatUIProps> = props => {
       >
         <div ref={messagesStartRef} />
 
-        <ChatMessages />
+        <ChatMessages onSaveSchedule={handleSaveSchedule} />
 
         <div ref={messagesEndRef} />
       </div>
