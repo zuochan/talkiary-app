@@ -23,6 +23,8 @@ import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 import { MessageActions } from "./message-actions"
 import { MessageMarkdown } from "./message-markdown"
+import { insertSchedule } from "@/lib/supabase/save-schedule"
+import { supabase } from "@/lib/supabase/browser-client"
 
 const ICON_SIZE = 32
 

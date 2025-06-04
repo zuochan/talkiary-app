@@ -62,6 +62,10 @@ export const ChatUI: FC<ChatUIProps> = props => {
 
   const [loading, setLoading] = useState(true)
 
+  const [schedule, setSchedule] = useState<
+    { time: string; activity: string; note?: string }[] | null
+  >(null)
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchMessages()
@@ -160,12 +164,11 @@ export const ChatUI: FC<ChatUIProps> = props => {
     const lastMessage = aiMessages[aiMessages.length - 1]?.content
     // console.log("[DEBUG] Last assistant message:", lastMessage)
 
-    console.log("[DEBUG] props.setSchedule is defined:", !!props.setSchedule)
     if (lastMessage && typeof props.setSchedule === "function") {
       const extracted = extractScheduleFromMarkdown(lastMessage)
-      // console.log("[DEBUG] Extracted schedule:", extracted)
       if (extracted.length > 0) {
         props.setSchedule(extracted)
+        setSchedule(extracted)
       }
     }
   }
@@ -199,6 +202,12 @@ export const ChatUI: FC<ChatUIProps> = props => {
       includeWorkspaceInstructions: chat.include_workspace_instructions,
       embeddingsProvider: chat.embeddings_provider as "openai" | "local"
     })
+  }
+
+  const handleSaveSchedule = () => {
+    if (schedule && typeof props.setSchedule === "function") {
+      props.setSchedule(schedule)
+    }
   }
 
   if (loading) {

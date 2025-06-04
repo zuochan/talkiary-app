@@ -38,6 +38,13 @@ export const MessageActions: FC<MessageActionsProps> = ({
     setShowCheckmark(true)
   }
 
+  const handleSaveScheduleClick = () => {
+    if (onSaveSchedule) {
+      onSaveSchedule()
+    }
+    setShowCheckmark(true)
+  }
+
   const handleForkChat = async () => {}
 
   useEffect(() => {
@@ -107,10 +114,14 @@ export const MessageActions: FC<MessageActionsProps> = ({
           side="bottom"
           display={<div>Save Schedule</div>}
           trigger={
-            <ScheduleSaveButton
-              size={MESSAGE_ICON_SIZE}
-              onClick={onSaveSchedule}
-            />
+            showCheckmark ? (
+              <IconCheck size={MESSAGE_ICON_SIZE} />
+            ) : (
+              <ScheduleSaveButton
+                size={MESSAGE_ICON_SIZE}
+                onClick={handleSaveScheduleClick}
+              />
+            )
           }
         />
       )}
