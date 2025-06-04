@@ -25,6 +25,8 @@ import { MessageActions } from "./message-actions"
 import { MessageMarkdown } from "./message-markdown"
 import { insertSchedule } from "@/lib/supabase/save-schedule"
 import { supabase } from "@/lib/supabase/browser-client"
+import { insertSchedule } from "@/lib/supabase/save-schedule"
+import { supabase } from "@/lib/supabase/browser-client"
 
 const ICON_SIZE = 32
 
