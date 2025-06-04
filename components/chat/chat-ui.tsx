@@ -66,10 +66,6 @@ export const ChatUI: FC<ChatUIProps> = props => {
     { time: string; activity: string; note?: string }[] | null
   >(null)
 
-  const [schedule, setSchedule] = useState<
-    { time: string; activity: string; note?: string }[] | null
-  >(null)
-
   useEffect(() => {
     const fetchData = async () => {
       await fetchMessages()
@@ -207,12 +203,6 @@ export const ChatUI: FC<ChatUIProps> = props => {
       includeWorkspaceInstructions: chat.include_workspace_instructions,
       embeddingsProvider: chat.embeddings_provider as "openai" | "local"
     })
-  }
-
-  const handleSaveSchedule = () => {
-    if (schedule && typeof props.setSchedule === "function") {
-      props.setSchedule(schedule)
-    }
   }
 
   const handleSaveSchedule = () => {
