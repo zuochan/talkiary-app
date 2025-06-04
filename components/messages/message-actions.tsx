@@ -2,6 +2,7 @@ import { ChatbotUIContext } from "@/context/context"
 import { IconCheck, IconCopy, IconEdit, IconRepeat } from "@tabler/icons-react"
 import { FC, useContext, useEffect, useState } from "react"
 import { WithTooltip } from "../ui/with-tooltip"
+import { ScheduleSaveButton } from "./schedule-save-button"
 
 export const MESSAGE_ICON_SIZE = 18
 
@@ -13,6 +14,8 @@ interface MessageActionsProps {
   onCopy: () => void
   onEdit: () => void
   onRegenerate: () => void
+  schedule?: { time: string; activity: string; note?: string }[]
+  onSaveSchedule?: () => void
 }
 
 export const MessageActions: FC<MessageActionsProps> = ({
@@ -22,7 +25,9 @@ export const MessageActions: FC<MessageActionsProps> = ({
   isHovering,
   onCopy,
   onEdit,
-  onRegenerate
+  onRegenerate,
+  schedule,
+  onSaveSchedule
 }) => {
   const { isGenerating } = useContext(ChatbotUIContext)
 
@@ -92,6 +97,20 @@ export const MessageActions: FC<MessageActionsProps> = ({
                 onClick={handleCopy}
               />
             )
+          }
+        />
+      )}
+
+      {isAssistant && isLast && schedule && schedule.length > 0 && (
+        <WithTooltip
+          delayDuration={1000}
+          side="bottom"
+          display={<div>Save Schedule</div>}
+          trigger={
+            <ScheduleSaveButton
+              size={MESSAGE_ICON_SIZE}
+              onClick={onSaveSchedule}
+            />
           }
         />
       )}

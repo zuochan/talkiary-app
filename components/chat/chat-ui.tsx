@@ -22,6 +22,8 @@ import { ChatSecondaryButtons } from "./chat-secondary-buttons"
 
 interface ChatUIProps {
   setSchedule: (s: { time: string; activity: string; note?: string }[]) => void
+  schedule: { time: string; activity: string; note?: string }[]
+  onSaveSchedule: () => void
 }
 
 export const ChatUI: FC<ChatUIProps> = props => {
@@ -231,7 +233,10 @@ export const ChatUI: FC<ChatUIProps> = props => {
       >
         <div ref={messagesStartRef} />
 
-        <ChatMessages />
+        <ChatMessages
+          schedule={props.schedule}
+          onSaveSchedule={props.onSaveSchedule}
+        />
 
         <div ref={messagesEndRef} />
       </div>

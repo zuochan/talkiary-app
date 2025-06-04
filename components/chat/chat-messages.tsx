@@ -4,9 +4,15 @@ import { Tables } from "@/supabase/types"
 import { FC, useContext, useState } from "react"
 import { Message } from "../messages/message"
 
-interface ChatMessagesProps {}
+interface ChatMessagesProps {
+  schedule: { time: string; activity: string; note?: string }[]
+  onSaveSchedule: () => void
+}
 
-export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
+export const ChatMessages: FC<ChatMessagesProps> = ({
+  schedule,
+  onSaveSchedule
+}) => {
   const { chatMessages, chatFileItems } = useContext(ChatbotUIContext)
 
   const { handleSendEdit } = useChatHandler()
@@ -32,6 +38,8 @@ export const ChatMessages: FC<ChatMessagesProps> = ({}) => {
           onStartEdit={setEditingMessage}
           onCancelEdit={() => setEditingMessage(undefined)}
           onSubmitEdit={handleSendEdit}
+          schedule={schedule}
+          onSaveSchedule={onSaveSchedule}
         />
       )
     })

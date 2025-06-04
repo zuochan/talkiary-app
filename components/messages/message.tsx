@@ -34,6 +34,8 @@ interface MessageProps {
   onStartEdit: (message: Tables<"messages">) => void
   onCancelEdit: () => void
   onSubmitEdit: (value: string, sequenceNumber: number) => void
+  schedule: { time: string; activity: string; note?: string }[]
+  onSaveSchedule: () => void
 }
 
 export const Message: FC<MessageProps> = ({
@@ -43,7 +45,9 @@ export const Message: FC<MessageProps> = ({
   isLast,
   onStartEdit,
   onCancelEdit,
-  onSubmitEdit
+  onSubmitEdit,
+  schedule,
+  onSaveSchedule
 }) => {
   const {
     assistants,
@@ -199,6 +203,8 @@ export const Message: FC<MessageProps> = ({
             isEditing={isEditing}
             isHovering={isHovering}
             onRegenerate={handleRegenerate}
+            schedule={schedule}
+            onSaveSchedule={onSaveSchedule}
           />
         </div>
         <div className="space-y-3">
