@@ -33,18 +33,11 @@ export default function ChatIDPage() {
 
   return (
     <>
-      <ChatUI setSchedule={setSchedule} />
-
-      {schedule.length > 0 && (
-        <div className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2">
-          <button
-            className="rounded bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700"
-            onClick={handleSaveSchedule}
-          >
-            💾 Save Schedule
-          </button>
-        </div>
-      )}
+      <ChatUI
+        setSchedule={setSchedule}
+        schedule={schedule}
+        onSaveSchedule={handleSaveSchedule}
+      />
     </>
   )
 }
