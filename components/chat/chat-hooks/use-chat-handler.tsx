@@ -158,22 +158,36 @@ export const useChatHandler = () => {
           | "local"
       })
     } else if (selectedWorkspace) {
-      // setChatSettings({
-      //   model: (selectedWorkspace.default_model ||
-      //     "gpt-4-1106-preview") as LLMID,
-      //   prompt:
-      //     selectedWorkspace.default_prompt ||
-      //     "You are a friendly, helpful AI assistant.",
-      //   temperature: selectedWorkspace.default_temperature || 0.5,
-      //   contextLength: selectedWorkspace.default_context_length || 4096,
-      //   includeProfileContext:
-      //     selectedWorkspace.include_profile_context || true,
-      //   includeWorkspaceInstructions:
-      //     selectedWorkspace.include_workspace_instructions || true,
-      //   embeddingsProvider:
-      //     (selectedWorkspace.embeddings_provider as "openai" | "local") ||
-      //     "openai"
-      // })
+      setChatSettings({
+        model: (selectedWorkspace.default_model ||
+          "gpt-4-1106-preview") as LLMID,
+        prompt:
+          selectedWorkspace.default_prompt ||
+          `You are Talkiary, a thoughtful and gentle AI assistant who helps users reflect on their day, organize their thoughts, and express their emotions through writing.
+
+            When the user creates or requests a schedule, output it using a Markdown table with three columns: Time, Activity, and Note. 
+            The table format must follow these rules:
+            - Use vertical bars (|) to separate each column.
+            - Include time in HH:MM format (e.g., 09:00).
+            - After the header row, include a separator row like: | --- | --- | --- |.
+            - Do not add any explanation or extra text outside the table.
+
+            Example:
+
+            | Time  | Activity     | Note         |
+            |-------|--------------|--------------|
+            | 08:00 | Breakfast    | Eggs & toast |
+            | 10:00 | Study        | Read AI book |`,
+        temperature: selectedWorkspace.default_temperature || 0.5,
+        contextLength: selectedWorkspace.default_context_length || 4096,
+        includeProfileContext:
+          selectedWorkspace.include_profile_context || true,
+        includeWorkspaceInstructions:
+          selectedWorkspace.include_workspace_instructions || true,
+        embeddingsProvider:
+          (selectedWorkspace.embeddings_provider as "openai" | "local") ||
+          "openai"
+      })
     }
 
     return router.push(`/${selectedWorkspace.id}/chat`)

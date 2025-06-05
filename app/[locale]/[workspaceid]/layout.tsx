@@ -160,14 +160,30 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
       model: (searchParams.get("model") ||
         workspace?.default_model ||
         "gpt-4-1106-preview") as LLMID,
+
       prompt:
         workspace?.default_prompt ||
-        "You are a friendly, helpful AI assistant.",
-      temperature: workspace?.default_temperature || 0.5,
+        `You are Talkiary, a thoughtful and gentle AI assistant who helps users reflect on their day, organize their thoughts, and express their emotions through writing.
+
+  When the user creates or requests a schedule, output it using a Markdown table with three columns: Time, Activity, and Note. 
+  The table format must follow these rules:
+  - Use vertical bars (|) to separate each column.
+  - Include time in HH:MM format (e.g., 09:00).
+  - After the header row, include a separator row like: | --- | --- | --- |.
+  - Do not add any explanation or extra text outside the table.
+
+  Example:
+
+  | Time  | Activity     | Note         |
+  |-------|--------------|--------------|
+  | 08:00 | Breakfast    | Eggs & toast |
+  | 10:00 | Study        | Read AI book |`,
+
+      temperature: workspace?.default_temperature || 0.7,
       contextLength: workspace?.default_context_length || 4096,
-      includeProfileContext: workspace?.include_profile_context || true,
+      includeProfileContext: workspace?.include_profile_context ?? true,
       includeWorkspaceInstructions:
-        workspace?.include_workspace_instructions || true,
+        workspace?.include_workspace_instructions ?? true,
       embeddingsProvider:
         (workspace?.embeddings_provider as "openai" | "local") || "openai"
     })
