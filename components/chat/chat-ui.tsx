@@ -33,6 +33,7 @@ export const ChatUI: FC<ChatUIProps> = props => {
 
   const {
     setChatMessages,
+    chatMessages,
     selectedChat,
     setSelectedChat,
     setChatSettings,
@@ -65,6 +66,22 @@ export const ChatUI: FC<ChatUIProps> = props => {
   const [schedule, setSchedule] = useState<
     { time: string; activity: string; note?: string }[] | null
   >(null)
+
+  // Update schedule when new assistant messages arrive
+  useEffect(() => {
+    const aiMessages = chatMessages.filter(
+      msg => msg.message.role === "assistant"
+    )
+    const lastMessage = aiMessages[aiMessages.length - 1]?.message.content
+
+    if (lastMessage && typeof props.setSchedule === "function") {
+      const extracted = extractScheduleFromMarkdown(lastMessage)
+      if (extracted.length > 0) {
+        props.setSchedule(extracted)
+        setSchedule(extracted)
+      }
+    }
+  }, [chatMessages])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -168,7 +185,6 @@ export const ChatUI: FC<ChatUIProps> = props => {
       const extracted = extractScheduleFromMarkdown(lastMessage)
       if (extracted.length > 0) {
         props.setSchedule(extracted)
-        setSchedule(extracted)
         setSchedule(extracted)
       }
     }

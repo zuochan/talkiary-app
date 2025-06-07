@@ -31,31 +31,42 @@ export const MessageActions: FC<MessageActionsProps> = ({
 }) => {
   const { isGenerating } = useContext(ChatbotUIContext)
 
-  const [showCheckmark, setShowCheckmark] = useState(false)
+  const [showCopyCheck, setShowCopyCheck] = useState(false)
+  const [showSaveCheck, setShowSaveCheck] = useState(false)
 
   const handleCopy = () => {
     onCopy()
-    setShowCheckmark(true)
+    setShowCopyCheck(true)
   }
 
   const handleSaveScheduleClick = () => {
     if (onSaveSchedule) {
       onSaveSchedule()
     }
-    setShowCheckmark(true)
+    setShowSaveCheck(true)
   }
 
   const handleForkChat = async () => {}
 
   useEffect(() => {
-    if (showCheckmark) {
+    if (showCopyCheck) {
       const timer = setTimeout(() => {
-        setShowCheckmark(false)
+        setShowCopyCheck(false)
       }, 2000)
 
       return () => clearTimeout(timer)
     }
-  }, [showCheckmark])
+  }, [showCopyCheck])
+
+  useEffect(() => {
+    if (showSaveCheck) {
+      const timer = setTimeout(() => {
+        setShowSaveCheck(false)
+      }, 2000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [showSaveCheck])
 
   return (isLast && isGenerating) || isEditing ? null : (
     <div className="text-muted-foreground flex items-center space-x-2">
@@ -95,7 +106,7 @@ export const MessageActions: FC<MessageActionsProps> = ({
           side="bottom"
           display={<div>Copy</div>}
           trigger={
-            showCheckmark ? (
+            showCopyCheck ? (
               <IconCheck size={MESSAGE_ICON_SIZE} />
             ) : (
               <IconCopy
@@ -114,7 +125,7 @@ export const MessageActions: FC<MessageActionsProps> = ({
           side="bottom"
           display={<div>Save Schedule</div>}
           trigger={
-            showCheckmark ? (
+            showSaveCheck ? (
               <IconCheck size={MESSAGE_ICON_SIZE} />
             ) : (
               <ScheduleSaveButton
