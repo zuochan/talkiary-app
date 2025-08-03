@@ -91,11 +91,9 @@ export const MessageActions: FC<MessageActionsProps> = ({
           side="bottom"
           display={<div>Edit</div>}
           trigger={
-            <IconEdit
-              className="cursor-pointer hover:opacity-50"
-              size={MESSAGE_ICON_SIZE}
-              onClick={onEdit}
-            />
+            <div className="cursor-pointer hover:opacity-50" onClick={onEdit}>
+              <IconEdit size={MESSAGE_ICON_SIZE} />
+            </div>
           }
         />
       )}
@@ -109,11 +107,12 @@ export const MessageActions: FC<MessageActionsProps> = ({
             showCopyCheck ? (
               <IconCheck size={MESSAGE_ICON_SIZE} />
             ) : (
-              <IconCopy
+              <div
                 className="cursor-pointer hover:opacity-50"
-                size={MESSAGE_ICON_SIZE}
                 onClick={handleCopy}
-              />
+              >
+                <IconCopy size={MESSAGE_ICON_SIZE} />
+              </div>
             )
           }
         />
@@ -143,11 +142,12 @@ export const MessageActions: FC<MessageActionsProps> = ({
           side="bottom"
           display={<div>Regenerate</div>}
           trigger={
-            <IconRepeat
+            <div
               className="cursor-pointer hover:opacity-50"
-              size={MESSAGE_ICON_SIZE}
               onClick={onRegenerate}
-            />
+            >
+              <IconRepeat size={MESSAGE_ICON_SIZE} />
+            </div>
           }
         />
       )}

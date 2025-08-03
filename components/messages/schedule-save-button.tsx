@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { forwardRef } from "react"
 import { IconDeviceFloppy } from "@tabler/icons-react"
 
 interface ScheduleSaveButtonProps {
@@ -6,15 +6,19 @@ interface ScheduleSaveButtonProps {
   size?: number
 }
 
-export const ScheduleSaveButton: FC<ScheduleSaveButtonProps> = ({
-  onClick,
-  size = 18
-}) => {
+export const ScheduleSaveButton = forwardRef<
+  HTMLDivElement,
+  ScheduleSaveButtonProps
+>(({ onClick, size = 18 }, ref) => {
   return (
-    <IconDeviceFloppy
+    <div
+      ref={ref}
       className="cursor-pointer hover:opacity-50"
-      size={size}
       onClick={onClick}
-    />
+    >
+      <IconDeviceFloppy size={size} />
+    </div>
   )
-}
+})
+
+ScheduleSaveButton.displayName = "ScheduleSaveButton"

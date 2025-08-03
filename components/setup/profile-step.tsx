@@ -10,7 +10,7 @@ import {
   IconCircleXFilled,
   IconLoader2
 } from "@tabler/icons-react"
-import { FC, useCallback, useState } from "react"
+import { FC, useCallback, useState, useEffect } from "react"
 import { LimitDisplay } from "../ui/limit-display"
 import { toast } from "sonner"
 
@@ -18,6 +18,7 @@ interface ProfileStepProps {
   username: string
   usernameAvailable: boolean
   displayName: string
+  userId?: string
   onUsernameAvailableChange: (isAvailable: boolean) => void
   onUsernameChange: (username: string) => void
   onDisplayNameChange: (name: string) => void
@@ -27,6 +28,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
   username,
   usernameAvailable,
   displayName,
+  userId,
   onUsernameAvailableChange,
   onUsernameChange,
   onDisplayNameChange
@@ -72,20 +74,44 @@ export const ProfileStep: FC<ProfileStepProps> = ({
 
       setLoading(true)
 
-      const response = await fetch(`/api/username/available`, {
-        method: "POST",
-        body: JSON.stringify({ username })
-      })
+      try {
+        const response = await fetch(`/api/username/available`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ username, userId })
+        })
 
-      const data = await response.json()
-      const isAvailable = data.isAvailable
+        if (!response.ok) {
+          console.error(
+            `Username availability check failed: ${response.status}`
+          )
+          onUsernameAvailableChange(false)
+          setLoading(false)
+          return
+        }
 
-      onUsernameAvailableChange(isAvailable)
+        const data = await response.json()
+        const isAvailable = data.isAvailable
+
+        onUsernameAvailableChange(isAvailable)
+      } catch (error) {
+        console.error("Username availability check error:", error)
+        onUsernameAvailableChange(false)
+      }
 
       setLoading(false)
     }, 500),
     []
   )
+
+  // Check username availability when component mounts with existing username
+  useEffect(() => {
+    if (username && username.length >= PROFILE_USERNAME_MIN) {
+      checkUsernameAvailability(username)
+    }
+  }, [username, checkUsernameAvailability])
 
   return (
     <>

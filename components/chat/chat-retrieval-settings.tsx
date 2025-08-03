@@ -21,18 +21,13 @@ export const ChatRetrievalSettings: FC<ChatRetrievalSettingsProps> = ({}) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
-        <WithTooltip
-          delayDuration={0}
-          side="top"
-          display={<div>Adjust retrieval settings.</div>}
-          trigger={
-            <IconAdjustmentsHorizontal
-              className="cursor-pointer pt-[4px] hover:opacity-50"
-              size={24}
-            />
-          }
-        />
+      <DialogTrigger asChild>
+        <div
+          className="cursor-pointer pt-[4px] hover:opacity-50"
+          title="Adjust retrieval settings"
+        >
+          <IconAdjustmentsHorizontal size={24} />
+        </div>
       </DialogTrigger>
 
       <DialogContent>

@@ -34,6 +34,29 @@ export default async function Login({
   const session = (await supabase.auth.getSession()).data.session
 
   if (session) {
+    // Check if profile exists for the user
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", session.user.id)
+      .single()
+
+    if (!profile) {
+      console.error("No profile found for user:", session.user.id, profileError)
+
+      // Data inconsistency detected - user exists in auth but not in profiles
+      // This means the create_profile_and_workspace trigger failed
+      console.log(
+        "Cleaning up inconsistent user data and forcing re-authentication..."
+      )
+
+      // Sign out the user to force them to sign up again (which will trigger the creation)
+      await supabase.auth.signOut()
+      return redirect(
+        "/login?message=Account setup incomplete. Please sign up again."
+      )
+    }
+
     const { data: homeWorkspace, error } = await supabase
       .from("workspaces")
       .select("*")
@@ -42,7 +65,9 @@ export default async function Login({
       .single()
 
     if (!homeWorkspace) {
-      throw new Error(error.message)
+      console.error("No home workspace found for user:", session.user.id, error)
+      // If profile exists but no home workspace, redirect to setup to create it
+      return redirect("/setup")
     }
 
     return redirect(`/${homeWorkspace.id}/chat`)
@@ -73,9 +98,13 @@ export default async function Login({
       .single()
 
     if (!homeWorkspace) {
-      throw new Error(
-        homeWorkspaceError?.message || "An unexpected error occurred"
+      console.error(
+        "No home workspace found for user:",
+        data.user.id,
+        homeWorkspaceError
       )
+      // If no home workspace, redirect to setup to complete onboarding
+      return redirect("/setup")
     }
 
     return redirect(`/${homeWorkspace.id}/chat`)

@@ -305,9 +305,9 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             alt={"Image"}
           />
         ) : (
-          <Button size="icon" variant="ghost">
+          <div className="mt-2 flex size-[34px] cursor-pointer items-center justify-center rounded hover:opacity-50">
             <IconUser size={SIDEBAR_ICON_SIZE} />
-          </Button>
+          </div>
         )}
       </SheetTrigger>
 

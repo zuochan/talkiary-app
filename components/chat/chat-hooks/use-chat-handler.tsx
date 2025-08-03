@@ -243,6 +243,7 @@ export const useChatHandler = () => {
       )
 
       let currentChat = selectedChat ? { ...selectedChat } : null
+      let newlyCreatedChat = false
 
       const b64Images = newMessageImages.map(image => image.base64)
 
@@ -365,6 +366,7 @@ export const useChatHandler = () => {
           setChats,
           setChatFiles
         )
+        newlyCreatedChat = true
       } else {
         const updatedChat = await updateChat(currentChat.id, {
           updated_at: new Date().toISOString()
@@ -397,6 +399,11 @@ export const useChatHandler = () => {
 
       setIsGenerating(false)
       setFirstTokenReceived(false)
+
+      // If this was a new chat creation, navigate to the chat URL
+      if (newlyCreatedChat) {
+        router.push(`/${selectedWorkspace!.id}/chat/${currentChat.id}`)
+      }
     } catch (error) {
       setIsGenerating(false)
       setFirstTokenReceived(false)

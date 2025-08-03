@@ -69,7 +69,8 @@ export const handleRetrieval = async (
   })
 
   if (!response.ok) {
-    console.error("Error retrieving:", response)
+    const errorText = await response.text()
+    throw new Error(`Error retrieving: ${response.status} ${errorText}`)
   }
 
   const { results } = (await response.json()) as {

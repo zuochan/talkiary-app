@@ -167,15 +167,11 @@ export const WorkspaceSettings: FC<WorkspaceSettingsProps> = ({}) => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <WithTooltip
-          display={<div>Workspace Settings</div>}
-          trigger={
-            <IconSettings
-              className="ml-3 cursor-pointer pr-[5px] hover:opacity-50"
-              size={32}
-              onClick={() => setIsOpen(true)}
-            />
-          }
+        <IconSettings
+          className="ml-3 cursor-pointer pr-[5px] hover:opacity-50"
+          size={32}
+          onClick={() => setIsOpen(true)}
+          title="Workspace Settings"
         />
       </SheetTrigger>
 

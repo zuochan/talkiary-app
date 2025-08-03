@@ -167,47 +167,70 @@ export const GlobalState: FC<GlobalStateProps> = ({ children }) => {
   }, [])
 
   const fetchStartingData = async () => {
-    const session = (await supabase.auth.getSession()).data.session
+    try {
+      const session = (await supabase.auth.getSession()).data.session
 
-    if (session) {
-      const user = session.user
+      if (session) {
+        const user = session.user
 
-      const profile = await getProfileByUserId(user.id)
-      setProfile(profile)
+        const profile = await getProfileByUserId(user.id)
+        setProfile(profile)
 
-      if (!profile.has_onboarded) {
-        return router.push("/setup")
-      }
-
-      const workspaces = await getWorkspacesByUserId(user.id)
-      setWorkspaces(workspaces)
-
-      for (const workspace of workspaces) {
-        let workspaceImageUrl = ""
-
-        if (workspace.image_path) {
-          workspaceImageUrl =
-            (await getWorkspaceImageFromStorage(workspace.image_path)) || ""
+        if (!profile.has_onboarded) {
+          return router.push("/setup")
         }
 
-        if (workspaceImageUrl) {
-          const response = await fetch(workspaceImageUrl)
-          const blob = await response.blob()
-          const base64 = await convertBlobToBase64(blob)
+        const workspaces = await getWorkspacesByUserId(user.id)
+        setWorkspaces(workspaces)
 
-          setWorkspaceImages(prev => [
-            ...prev,
-            {
-              workspaceId: workspace.id,
-              path: workspace.image_path,
-              base64: base64,
-              url: workspaceImageUrl
-            }
-          ])
+        // Set default workspace and chat settings
+        const homeWorkspace = workspaces.find(w => w.is_home)
+        if (homeWorkspace) {
+          setSelectedWorkspace(homeWorkspace)
+          // Set default chat settings from workspace
+          setChatSettings({
+            model: homeWorkspace.default_model,
+            prompt: homeWorkspace.default_prompt,
+            temperature: homeWorkspace.default_temperature,
+            contextLength: homeWorkspace.default_context_length,
+            includeProfileContext: homeWorkspace.include_profile_context,
+            includeWorkspaceInstructions:
+              homeWorkspace.include_workspace_instructions,
+            embeddingsProvider: homeWorkspace.embeddings_provider
+          })
         }
-      }
 
-      return profile
+        for (const workspace of workspaces) {
+          let workspaceImageUrl = ""
+
+          if (workspace.image_path) {
+            workspaceImageUrl =
+              (await getWorkspaceImageFromStorage(workspace.image_path)) || ""
+          }
+
+          if (workspaceImageUrl) {
+            const response = await fetch(workspaceImageUrl)
+            const blob = await response.blob()
+            const base64 = await convertBlobToBase64(blob)
+
+            setWorkspaceImages(prev => [
+              ...prev,
+              {
+                workspaceId: workspace.id,
+                path: workspace.image_path,
+                base64: base64,
+                url: workspaceImageUrl
+              }
+            ])
+          }
+        }
+
+        return profile
+      }
+    } catch (error) {
+      console.error("Error fetching starting data:", error)
+      // Redirect to login if profile fetch fails
+      router.push("/login")
     }
   }
 
